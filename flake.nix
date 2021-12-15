@@ -10,24 +10,19 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }:
-    let
-      recImport = nixpkgs.legacyPackages.x86_64-linux.callPackage ./utils/recImport.nix {};
-      localModules = recImport ./modules;
-    in {
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
     nixosConfigurations = {
       logos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux"; # the system architecture
-        modules =
-          localModules ++ [
+        modules = [
             home-manager.nixosModules.home-manager
             ./configuration.nix
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.ldlework = import ./home.nix;
+              home-manager.users.lord-valen = import ./home.nix;
             }
-          ];
+        ];
         specialArgs = { inherit inputs; };
       };
     };
